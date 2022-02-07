@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: empsys
+  thymeleaf:
+    #prefix: classpath:/templates
+    cache: false
+    encoding: utf-8
+  #热部署, 修改类和资源时不重启服务
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java  #重启目录
+      exclude: static/**  #设置classpath下 static 目录内容修改后不重启。一般设置为静态资源目录
+    freemarker:
+      cache: false  #页面不加载缓存，修改即时生效
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zf?serverTimezone=UTC
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: TutorialsHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+mybatis:
+  #config-location: classpath:mybatis/mybatis-config.xml
+  type-aliases-package: com.lanqiao.empsys.domain
+  mapper-locations: classpath:mappers/**/*.xml
+
+
+
+# 分页reasonable原本为false
+pagehelper:
+  helperDialect: mysql
+  offsetAsPageNum: true
+  rowBoundsWithCount: true
+  reasonable: false
+  supportMethodsArguments: true
+  returnPageInfo: true
+  params: count=countSql
+
+
+# 开放所有的 Web endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# 输出 mybatis SQL日志,在logback里面的不用配置
+logging:
+  level:
+    root: INFO
+    # com.lanqiao.empsys.mapper: DEBUG
+    # 日志文件
+    #    path: /Users/jamesmac/projects/SpringBootProjects/springboot-tutorials
+  pattern:
+    file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
+    console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
+

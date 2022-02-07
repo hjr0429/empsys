@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanqiao.empsys.mapper.UserMapper">
+
+    <resultMap id="baseResultMap" type="com.lanqiao.empsys.domain.User">
+        <id column="USER_ID" property="userid"/>
+        <result column="USER_NAME" property="username"/>
+        <result column="PASSWORD" property="password"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="baseResultMap" parameterType="com.lanqiao.empsys.domain.User">
+        select *
+        from usersinfo
+        where USER_NAME=#{username}
+    </select>
+</mapper>
