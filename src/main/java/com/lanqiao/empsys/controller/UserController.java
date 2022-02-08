@@ -24,7 +24,7 @@ public class UserController {
     public String login(User user){
         User userLogin = this.userService.selectById(user);
         if (userLogin != null) {
-            return "employee/list";
+            return "redirect:/employees";
         }
         return "redirect:/";
     }
