@@ -3,6 +3,7 @@ package com.lanqiao.empsys.domain;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 
@@ -33,6 +34,8 @@ public class Employees implements Serializable {
     /**
      * 
      */
+    /*前端input传入日期时必须使用注解，否则会类型转换错误*/
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date hiredate;
 
     /**

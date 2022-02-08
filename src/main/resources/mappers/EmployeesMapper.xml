@@ -33,7 +33,7 @@
         where  EMPNO = #{empno,jdbcType=INTEGER} 
     </select>
 
-    <select id="selectBySelective" parameterType="com.lanqiao.empsys.domain.Employees" resultMap="BaseResultMap">
+    <select id="selectBySelective" parameterType="Employees" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from employees
@@ -46,8 +46,8 @@
                 AND JOB = #{employees.job}
             </if>
 
-            <if test="employees.deptno != null and employees.deptno.trim().length()>0">
-                AND DEPTNO = #{employees.deptno},
+            <if test="employees.deptno != null ">
+                AND DEPTNO = #{employees.deptno}
             </if>
         </where>
     </select>
@@ -57,7 +57,7 @@
         where  EMPNO = #{empno,jdbcType=INTEGER} 
     </delete>
 
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.lanqiao.empsys.domain.Employees" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="empno" keyProperty="empno" parameterType="Employees" useGeneratedKeys="true">
         insert into employees
         ( EMPNO,
           ENAME,
@@ -74,10 +74,11 @@
                 #{mgr,jdbcType=INTEGER},
                 #{hiredate,jdbcType=DATE},
                 #{sal,jdbcType=DOUBLE},
-                #{comm,jdbcType=DOUBLE},#
-                {deptno,jdbcType=INTEGER})
+                #{comm,jdbcType=DOUBLE},
+                #{deptno,jdbcType=INTEGER})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.lanqiao.empsys.domain.Employees" useGeneratedKeys="true">
+
+    <insert id="insertSelective" keyColumn="empno" keyProperty="empno" parameterType="com.lanqiao.empsys.domain.Employees" useGeneratedKeys="true">
         insert into employees
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="empno != null">EMPNO,</if>
@@ -100,7 +101,8 @@
                 <if test="deptno != null"> #{deptno,jdbcType=INTEGER},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.lanqiao.empsys.domain.Employees">
+
+    <update id="updateByPrimaryKeySelective" parameterType="Employees">
         update employees
         <set>
                 <if test="ename != null">
@@ -127,6 +129,7 @@
         </set>
         where   EMPNO = #{empno,jdbcType=INTEGER} 
     </update>
+
    <!-- <update id="updateByPrimaryKey" parameterType="com.lanqiao.empsys.domain.Employees">
         update employees
         set 

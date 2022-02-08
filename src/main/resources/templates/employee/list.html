@@ -11,37 +11,89 @@
             th:src="@{/component/bootstrap-3.3.7/js/bootstrap.js}"></script>
     <link rel="stylesheet" href="../../static/component/bootstrap-3.3.7/css/bootstrap.css"
           th:href="@{/component/bootstrap-3.3.7/css/bootstrap.css}">
+    <script>
+        function toUpdate(empno) {
+            $.get(`/employees/${empno}`,function (resp) {
+                $('#updateForm-modal-body').html(resp);/*将模态框的内容设置为updateForm.html的内容*/
+            });
+        }
+
+        function toInsert() {
+            $.get("/employees/add",function (resp) {
+                $('#addForm-modal-body').html(resp);/*将模态框的内容设置为updateForm.html的内容*/
+            });
+        }
+
+        function toDelete(empno) {
+            if (confirm("确定要删除吗？") === true) {
+                 $.get(`/employees/delete/${empno}`,function (resp) {
+                     alert("删除成功！");
+                     location.reload();
+                 });
+            }
+        }
+
+
+        $(document).ready(function(){
+            // 在这里写你的代码...
+            $('#resetBtn').on("click",function () {
+                // alert("here");
+                location.replace("/employees")
+            });
+
+
+        });
+
+    </script>
 </head>
 <body>
 <div class="container" style="margin-top: 50px;">
     <div class="row clearfix">
         <div class="col-md-10 column col-md-offset-1">
             <form action="/employees" class="form-horizontal" role="form"  method="get">
-                <div class="input-group">
-                    <span class="input-group-addon">姓名</span>
-                    <input id="ename" name="ename" type="text"
-                           th:value="${param.ename}" class="form-control" placeholder="请输入员工姓名" >
-
-                    <span class="input-group-addon" >工作</span>
-                    <input id="job" name="job" type="text"
-                           th:value="${param.job}" class="form-control" placeholder="请输入工作">
-
-                    <span class="input-group-addon">部门</span>
-                    <select name="deptno" id="deptno" class="form-control">
+                <div class="form-group">
+                    <label for="ename" class="col-sm-1 control-label">姓名</label>
+                    <div class="col-sm-4">
+                        <input id="ename" name="ename" type="text"
+                               th:value="${param.ename}" class="form-control" placeholder="请输入员工姓名" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="job" class="col-sm-1 control-label">工作</label>
+                    <div class="col-sm-4">
+                        <input id="job" name="job" type="text"
+                               th:value="${param.job}" class="form-control" placeholder="请输入工作">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-1 control-label">部门</label>
+                    <div class="col-sm-2">
+                        <select name="deptno" id="deptno" class="form-control">
                         <option value="">---- 请选择 ----</option>
                         <option value="10">ACCOUNTING</option>
                         <option value="20">RESEARCH</option>
                         <option value="30">SALES</option>
                         <option value="40">OPERATIONS</option>
                     </select>
+                    </div>
                 </div>
                 <br>
                 <div class="form-group">
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-1 " style="margin-left: 25px">
                         <button id="queryBtn" type="submit" class="btn btn-primary btn-block">查询</button>
                     </div>
-                    <div class="col-sm-6 text-left">
-                        <button type="reset" class="btn btn-default btn-block">重置</button>
+                    <div class="col-sm-1 ">
+                        <button id="resetBtn" type="button" class="btn btn-default btn-block" >重置</button>
+                    </div>
+                    <div class="col-sm-1 ">
+                        <button
+                                type="button"
+                                class="btn btn-info"
+                                data-toggle="modal"
+                                th:onclick="toInsert()"
+                                data-target="#addForm">
+                                增加
+                        </button>
                     </div>
                 </div>
             </form>
@@ -80,14 +132,21 @@
                             <td th:text="${emp.comm}">1000.0</td>
                             <td th:text="${emp.deptno}">ACCOUNTING</td>
                             <td>
-                                <a href="javascript:void(0)" class="btn btn-primary"
-                                   data-toggle="modal" data-backdrop="static" th:onclick="|toUpdate(${emp.empno})|"
-                                   data-target=".bs-updateform-modal-lg">更新</a>
+                                <button
+                                   class="btn btn-warning"
+                                   data-toggle="modal"
+                                   data-backdrop="static"
+                                   th:onclick="|toUpdate(${emp.empno})|"
+                                   data-target=".bs-updateForm-modal-lg">
+                                    更新
+                                </button>
+                                <button class="btn btn-danger" th:onclick="|toDelete(${emp.empno})|">删除</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation" class="text-center" style="margin: 0px;padding: 0px;">
+                    <!--分页-->
+                    <nav aria-label="Page navigation" class="text-center" style="margin: 0;padding: 0;">
                         <ul class="pagination">
                             <li th:if="${employeeList.pageNum le employeeList.pages}">
                                 <a th:href="@{/employees(pageNum=1)}" aria-label="Previous">
@@ -98,30 +157,38 @@
                                 <a th:href="@{/employees(pageNum=${employeeList.pageNum}-1)}">&lt;</a>
                             </li>
                             <li th:if="${(employeeList.pageNum)-3 gt 1}">
-                                <a th:text="${(employeeList.pageNum)-4}" th:href="@{/employees(pageNum=${employeeList.pageNum}-4)}"></a>
+                                <a th:text="${(employeeList.pageNum)-4}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}-4)}"></a>
                             </li>
                             <li th:if="${(employeeList.pageNum)-2 gt 1}">
-                                <a th:text="${(employeeList.pageNum)-3}" th:href="@{/employees(pageNum=${employeeList.pageNum}-3)}"></a>
+                                <a th:text="${(employeeList.pageNum)-3}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}-3)}"></a>
                             </li>
                             <li th:if="${(employeeList.pageNum)-1 gt 1}">
-                                <a th:text="${(employeeList.pageNum)-2}" th:href="@{/employees(pageNum=${employeeList.pageNum}-2)}"></a>
+                                <a th:text="${(employeeList.pageNum)-2}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}-2)}"></a>
                             </li>
                             <li th:if="${employeeList.pageNum gt 1}" >
-                                <a th:text="${(employeeList.pageNum)-1}" th:href="@{/employees(pageNum=${employeeList.pageNum}-1)}"></a>
+                                <a th:text="${(employeeList.pageNum)-1}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}-1)}"></a>
                             </li>
                             <!--/* 当前页 */-->
                             <li th:if="${employeeList.pageNum le employeeList.pages}"
                                 th:class="${employeeList.pageNum le employeeList.pages ? 'active':''}">
-                                <a th:text="${employeeList.pageNum}" th:href="@{/employees(pageNum=${employeeList.pageNum})}"></a>
+                                <a th:text="${employeeList.pageNum}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum})}"></a>
                             </li>
                             <li th:if="${employeeList.pageNum+1 le employeeList.pages}">
-                                <a th:text="${employeeList.pageNum+1}" th:href="@{/employees(pageNum=${employeeList.pageNum}+1)}"></a>
+                                <a th:text="${employeeList.pageNum+1}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}+1)}"></a>
                             </li>
                             <li th:if="${employeeList.pageNum+2 le employeeList.pages}">
-                                <a th:text="${employeeList.pageNum+2}" th:href="@{/employees(pageNum=${employeeList.pageNum}+2)}"></a>
+                                <a th:text="${employeeList.pageNum+2}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}+2)}"></a>
                             </li>
                             <li th:if="${employeeList.pageNum+3 le employeeList.pages}">
-                                <a th:text="${employeeList.pageNum+3}" th:href="@{/employees(pageNum=${employeeList.pageNum}+3)}"></a>
+                                <a th:text="${employeeList.pageNum+3}"
+                                   th:href="@{/employees(pageNum=${employeeList.pageNum}+3)}"></a>
                             </li>
                             <li th:if="${employeeList.pageNum lt employeeList.pages}">
                                 <a th:href="@{/employees(pageNum=${employeeList.pageNum}+1)}">&gt;</a>
@@ -134,11 +201,6 @@
                         </ul>
                     </nav>
                 </div>
-                <!--
-                <div class="panel-footer">
-                    Panel footer
-                </div>
-                -->
             </div>
 
         </div>
@@ -146,6 +208,32 @@
     </div>
 </div>
 <!-- 更新的模态框 -->
-<!--<div class="modal fade bs-updateform-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
+<div class="modal fade bs-updateForm-modal-lg" id="updateForm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel1">更新</h4>
+            </div>
+            <div id="updateForm-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加的模态框 -->
+<div class="modal fade bs-addForm-modal-lg" id="addForm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel2">添加</h4>
+            </div>
+            <div id="addForm-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -5,7 +5,6 @@ import com.lanqiao.empsys.domain.Employees;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
  * @Entity com.lanqiao.empsys.domain.Employees
