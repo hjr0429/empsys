@@ -113,11 +113,13 @@
                             <th>编号</th>
                             <th>姓名</th>
                             <th>工作</th>
+                            <th>经理编号</th>
                             <th>经理</th>
                             <th>入职日期</th>
                             <th>工资</th>
                             <th>奖金</th>
                             <th>部门号</th>
+                            <th>部门名</th>
                             <td>操作</td>
                         </tr>
                         </thead>
@@ -127,10 +129,12 @@
                             <td th:text="${emp.ename}">Monthly</td>
                             <td th:text="${emp.job}">CLERK</td>
                             <td th:text="${emp.mgr}">KING</td>
+                            <td th:text="${emp.mname}">null</td>
                             <td th:text="${#dates.format(emp.hiredate,'yyyy-MM-dd')}">2020-11-22</td>
                             <td th:text="${emp.sal}">9999.0</td>
                             <td th:text="${emp.comm}">1000.0</td>
                             <td th:text="${emp.deptno}">ACCOUNTING</td>
+                            <td th:text="${emp.dname}">ACCOUNTING</td>
                             <td>
                                 <button
                                    class="btn btn-warning"

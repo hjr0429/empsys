@@ -31,6 +31,10 @@ public class Employees implements Serializable {
      */
     private Integer mgr;
 
+
+    /*员工经理名*/
+    private String mname;
+
     /**
      * 
      */
@@ -52,6 +56,9 @@ public class Employees implements Serializable {
      * 
      */
     private Integer deptno;
+
+
+    private String dname;
 
     private static final long serialVersionUID = 1L;
 }

@@ -13,6 +13,8 @@
             <result property="sal" column="SAL" jdbcType="DOUBLE"/>
             <result property="comm" column="COMM" jdbcType="DOUBLE"/>
             <result property="deptno" column="DEPTNO" jdbcType="INTEGER"/>
+            <result property="ename" column="ename"/>
+            <result property="dname" column="dname"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -35,19 +37,32 @@
 
     <select id="selectBySelective" parameterType="Employees" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
-        from employees
+        e.EMPNO,
+        e.ENAME,
+        e.JOB,
+        e.MGR,
+        m.ENAME mname,
+        e.HIREDATE,
+        e.SAL,
+        e.COMM,
+        e.DEPTNO,
+        d.DNAME dname
+        from employees e, employees m,department d
         <where>
+
+             AND m.EMPNO=e.MGR
+             AND e.deptno=d.deptno
+            
             <if test="employees.ename != null and employees.ename.trim().length()>0" >
                 <bind name="pattern" value="'%'+employees.ename+'%'"/>
-                AND ENAME like #{pattern}
+                AND e.ENAME like #{pattern}
             </if>
             <if test="employees.job != null and employees.job.trim().length()>0">
-                AND JOB = #{employees.job}
+                AND e.JOB = #{employees.job}
             </if>
 
             <if test="employees.deptno != null ">
-                AND DEPTNO = #{employees.deptno}
+                AND e.DEPTNO = #{employees.deptno}
             </if>
         </where>
     </select>
