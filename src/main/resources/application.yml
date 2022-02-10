@@ -5,6 +5,12 @@ spring:
     #prefix: classpath:/templates
     cache: false
     encoding: utf-8
+  redis:
+      port: 6379 # Redis 端口号
+      database: 0
+      host: localhost  # Redis 主机地址或IP
+#      password: myredis # Redis 连接密码
+
   #热部署, 修改类和资源时不重启服务
   devtools:
     restart:
@@ -12,7 +18,7 @@ spring:
       additional-paths: src/main/java  #重启目录
       exclude: static/**  #设置classpath下 static 目录内容修改后不重启。一般设置为静态资源目录
     freemarker:
-      cache: false  #页面不加载缓存，修改即时生效
+      cache: true  #页面不加载缓存，修改即时生效
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/zf?serverTimezone=UTC

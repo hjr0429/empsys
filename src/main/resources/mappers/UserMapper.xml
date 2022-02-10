@@ -12,6 +12,6 @@
     <select id="selectById" resultMap="baseResultMap" parameterType="com.lanqiao.empsys.domain.User">
         select *
         from usersinfo
-        where USER_NAME=#{username}
+        where USER_NAME=#{username} AND PASSWORD=#{password}
     </select>
 </mapper>

@@ -48,6 +48,7 @@
 </head>
 <body>
 <div class="container" style="margin-top: 50px;">
+    <div th:replace="common/header_footer::header" ></div>
     <div class="row clearfix">
         <div class="col-md-10 column col-md-offset-1">
             <form action="/employees" class="form-horizontal" role="form"  method="get">
@@ -210,6 +211,7 @@
         </div>
         <div class="col-md-1 column"></div>
     </div>
+    <div th:replace="common/header_footer::footer('这是底部')" ></div>
 </div>
 <!-- 更新的模态框 -->
 <div class="modal fade bs-updateForm-modal-lg" id="updateForm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
